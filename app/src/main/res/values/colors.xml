@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary colors -->
+    <color name="primary_color">#4F46E5</color>
+    <color name="primary_light">#EEF2FF</color>
+    <color name="primary_dark">#3730A3</color>
+
+    <!-- Secondary accent color -->
+    <color name="secondary_color">#10B981</color>
+    <color name="secondary_light">#ECFDF5</color>
+
+    <!-- Background colors -->
+    <color name="background_color">#F2F5FA</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="card_stroke">#E5E7EB</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+
+    <!-- Utility colors -->
+    <color name="progress_track">#E4E4E7</color>
+    <color name="white">#FFFFFF</color>
 </resources>
