@@ -3,6 +3,7 @@ package com.usmanzafar.meditrack;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -21,22 +22,18 @@ public class SplashScreen extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_splash_screen);
 
-        ImageView logo = findViewById(R.id.app_logo);
+        // Apply animation to the logo
+        ImageView logo = findViewById(R.id.ivLogo);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        logo.startAnimation(animation);
 
-
-        Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate);
-
-
-        logo.startAnimation(rotateAnimation);
-
-
-        new Handler().postDelayed(new Runnable() {
+        // Delay to show the splash screen
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent start = new Intent(SplashScreen.this, MainActivity.class);
-                startActivity(start);
+                startActivity(new Intent(SplashScreen.this, LoginActivity.class));
                 finish();
             }
-        }, 2000);
+        }, 2000); // 2 seconds delay
     }
 }

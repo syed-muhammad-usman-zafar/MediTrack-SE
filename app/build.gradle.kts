@@ -44,6 +44,12 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.gson)
 
+    // Add these lines
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.play.services.location)
+    implementation(libs.firebase.database)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
