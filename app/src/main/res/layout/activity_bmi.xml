@@ -18,7 +18,8 @@
         android:background="@color/primary_dark"
         app:title="BMI Calculator"
         app:titleTextColor="@color/white"
-        android:elevation="4dp" />
+        android:elevation="4dp"
+        app:navigationIcon="@drawable/ic_arrow_back"/>
 
     <!-- Main Content -->
     <ScrollView

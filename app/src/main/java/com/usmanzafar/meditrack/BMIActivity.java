@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.material.textfield.TextInputEditText;
 
 public class BMIActivity extends AppCompatActivity {
@@ -42,6 +44,9 @@ public class BMIActivity extends AppCompatActivity {
                 calculateBMI();
             }
         });
+
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
     }
 
     private void calculateBMI() {

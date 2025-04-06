@@ -18,8 +18,8 @@
         android:background="@color/primary_dark"
         app:title="MediTrack"
         app:titleTextColor="@color/white"
-        android:elevation="4dp"
-        />
+        android:elevation="4dp"/>
+
 
     <!-- Main Content Area -->
     <ScrollView
@@ -49,7 +49,6 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Usman"
                 android:textColor="@color/text_primary"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -119,6 +118,9 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+
+
             <!-- Features Section Title -->
             <TextView
                 android:layout_width="wrap_content"
@@ -336,9 +338,9 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Profile Feature -->
+            <!-- Health Info Feature -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_profile"
+                android:id="@+id/card_health_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -366,7 +368,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Your Profile"
+                        android:text="Get Health Info"
                         android:textSize="16sp"
                         android:textColor="@color/white"
                         android:textStyle="bold"/>
