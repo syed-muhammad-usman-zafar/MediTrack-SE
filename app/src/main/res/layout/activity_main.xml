@@ -54,7 +54,7 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp"/>
 
-            <!-- Medication Overview Card -->
+            <!-- BMI Status Card (Replacing Medication Overview Card) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Today's medications"
+                        android:text="Your BMI Status"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="#000000"
@@ -87,9 +87,10 @@
                         android:gravity="center_vertical">
 
                         <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/bmi_indicator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:progress="75"
+                            android:progress="50"
                             app:indicatorSize="48dp"
                             app:trackThickness="6dp"
                             app:indicatorColor="@color/primary_color"
@@ -102,24 +103,24 @@
                             android:layout_marginStart="16dp">
 
                             <TextView
+                                android:id="@+id/bmi_value"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="3 of 4 completed"
+                                android:text="BMI: Not calculated"
                                 android:textSize="16sp"
                                 android:textColor="#000000"/>
 
                             <TextView
+                                android:id="@+id/bmi_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1 remaining at 8:00 PM"
+                                android:text="Tap BMI Calculator to check your BMI"
                                 android:textSize="14sp"
                                 android:textColor="#616161"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-
 
             <!-- Features Section Title -->
             <TextView

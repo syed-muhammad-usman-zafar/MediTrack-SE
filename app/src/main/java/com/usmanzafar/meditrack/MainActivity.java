@@ -1,6 +1,7 @@
 package com.usmanzafar.meditrack;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,12 +15,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextView userNameTextView;
+    private TextView bmiValueTextView;
+    private TextView bmiStatusTextView;
+    private CircularProgressIndicator bmiIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +34,19 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        // Initialize TextView for user name
+        // Initialize TextViews and BMI indicator
         userNameTextView = findViewById(R.id.user_name);
+        bmiValueTextView = findViewById(R.id.bmi_value);
+        bmiStatusTextView = findViewById(R.id.bmi_status);
+
+        //circle indicator intializer
+        bmiIndicator = findViewById(R.id.bmi_indicator);
 
         // Set user name
         updateUserNameDisplay();
+
+        // Update BMI display
+        updateBMIDisplay();
 
         // Toolbar Setup
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -57,6 +70,50 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         // Update the user name display when resuming the activity
         updateUserNameDisplay();
+        // Update BMI display when returning from BMI calculator
+        updateBMIDisplay();
+    }
+
+    private void updateBMIDisplay() {
+        SharedPreferences sharedPreferences = getSharedPreferences(BMIActivity.BMI_PREFS, MODE_PRIVATE);
+        float bmiValue = sharedPreferences.getFloat(BMIActivity.BMI_VALUE, -1);
+        String bmiCategory = sharedPreferences.getString(BMIActivity.BMI_CATEGORY, "");
+
+        if (bmiValue >= 0) {
+            // User has calculated BMI
+            bmiValueTextView.setText(String.format("BMI: %.1f", bmiValue));
+            bmiStatusTextView.setText("Category: " + bmiCategory);
+
+            // Set progress based on BMI range
+            // Healthy BMI range is 18.5-25, we'll map our progress from 0-100 to 16-35 BMI range
+            int progressValue;
+            if (bmiValue <= 16) {
+                progressValue = 0;
+            } else if (bmiValue >= 35) {
+                progressValue = 100;
+            } else {
+                progressValue = (int)((bmiValue - 16) * (100.0 / (35 - 16)));
+            }
+            bmiIndicator.setProgress(progressValue);
+
+            // Set color based on category
+            int color;
+            if (bmiCategory.equals("Normal")) {
+                color = ContextCompat.getColor(this, R.color.progress_healthy); // Green for normal
+            } else if (bmiCategory.equals("Underweight") || bmiCategory.equals("Severely Underweight")) {
+                color = ContextCompat.getColor(this, android.R.color.holo_blue_dark); // Blue for underweight
+            } else {
+                color = ContextCompat.getColor(this, android.R.color.holo_red_dark); // Red for overweight/obese
+            }
+            bmiIndicator.setIndicatorColor(color);
+
+        } else {
+            // BMI not calculated yet
+            bmiValueTextView.setText("BMI: Not calculated");
+            bmiStatusTextView.setText("Tap BMI Calculator to check your BMI");
+            bmiIndicator.setProgress(50); // Neutral position
+            bmiIndicator.setIndicatorColor(ContextCompat.getColor(this, R.color.primary_color));
+        }
     }
 
     private void updateUserNameDisplay() {
@@ -80,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
                 userNameTextView.setText("User");
             }
         } else {
-            // This shouldn't happen since we check for logged-in user in LoginActivity
-            // But just in case, go back to login screen
+            // YE HONA NAI CHAIYE BAS ADDITIONAL CHECK RKHA WA TO BE SURE
+            // wapis login screen pr jaega
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }

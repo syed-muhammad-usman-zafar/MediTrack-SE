@@ -1,5 +1,6 @@
 package com.usmanzafar.meditrack;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,11 @@ public class BMIActivity extends AppCompatActivity {
     private TextInputEditText weightInput, heightFeetInput, heightInchesInput;
     private TextView resultText, suggestionText;
     private Button calculateButton;
+
+    // Constants for SharedPreferences
+    public static final String BMI_PREFS = "BMIPrefs";
+    public static final String BMI_VALUE = "BMIValue";
+    public static final String BMI_CATEGORY = "BMICategory";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,6 @@ public class BMIActivity extends AppCompatActivity {
                 calculateBMI();
             }
         });
-
 
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
     }
@@ -81,22 +86,37 @@ public class BMIActivity extends AppCompatActivity {
 
             // Determine category & apply suggestion
             String suggestion;
+            String category;
+
             if (BMI < 16) {
                 suggestion = "Severely underweight! Please consult a doctor immediately.";
+                category = "Severely Underweight";
             } else if (BMI < 18.5) {
                 suggestion = "You are underweight. Consider increasing your calorie intake with nutritious foods.";
+                category = "Underweight";
             } else if (BMI < 25) {
                 suggestion = "You have a healthy BMI. Keep maintaining a balanced diet and regular exercise!";
+                category = "Normal";
             } else if (BMI < 30) {
                 suggestion = "You are overweight. Consider a regular exercise routine and a healthier diet.";
+                category = "Overweight";
             } else if (BMI < 35) {
                 suggestion = "You are in the obese category. A structured fitness and nutrition plan is recommended.";
+                category = "Obese";
             } else {
                 suggestion = "Severely obese! Please seek medical advice as soon as possible.";
+                category = "Severely Obese";
             }
 
             // Apply text
             suggestionText.setText(suggestion);
+
+            // Save BMI value and category to SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences(BMI_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putFloat(BMI_VALUE, (float) BMI);
+            editor.putString(BMI_CATEGORY, category);
+            editor.apply();
 
         } catch (NumberFormatException e) {
             resultText.setText("Please enter valid numbers");
