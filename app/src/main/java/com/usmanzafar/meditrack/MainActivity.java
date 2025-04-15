@@ -3,12 +3,15 @@ package com.usmanzafar.meditrack;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -18,6 +21,8 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -62,7 +67,35 @@ public class MainActivity extends AppCompatActivity {
         // Set click listeners for various features (BMI, Nutrition, Pharmacies)
         setupFeatureListeners();
 
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                return true; // Already here
+            }
+
+            Intent intent = null;
+            if (id == R.id.nav_medications) {
+                intent = new Intent(MainActivity.this, TrackMedicationsActivity.class);
+            } else if (id == R.id.nav_calendar) {
+                intent = new Intent(MainActivity.this, CalendarActivity.class);
+            }
+
+
+            if (intent != null) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // <--- smoother transition
+                startActivity(intent);
+                return true;
+            }
+
+            return false;
+        });
+
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
     }
 
     @Override
@@ -72,49 +105,53 @@ public class MainActivity extends AppCompatActivity {
         updateUserNameDisplay();
         // Update BMI display when returning from BMI calculator
         updateBMIDisplay();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
     }
 
     private void updateBMIDisplay() {
-        SharedPreferences sharedPreferences = getSharedPreferences(BMIActivity.BMI_PREFS, MODE_PRIVATE);
-        float bmiValue = sharedPreferences.getFloat(BMIActivity.BMI_VALUE, -1);
-        String bmiCategory = sharedPreferences.getString(BMIActivity.BMI_CATEGORY, "");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String uid = currentUser.getUid(); // Get user-specific key
 
-        if (bmiValue >= 0) {
-            // User has calculated BMI
-            bmiValueTextView.setText(String.format("BMI: %.1f", bmiValue));
-            bmiStatusTextView.setText("Category: " + bmiCategory);
+            SharedPreferences sharedPreferences = getSharedPreferences(BMIActivity.BMI_PREFS, MODE_PRIVATE);
+            float bmiValue = sharedPreferences.getFloat(BMIActivity.BMI_VALUE + "_" + uid, -1);
+            String bmiCategory = sharedPreferences.getString(BMIActivity.BMI_CATEGORY + "_" + uid, "");
 
-            // Set progress based on BMI range
-            // Healthy BMI range is 18.5-25, we'll map our progress from 0-100 to 16-35 BMI range
-            int progressValue;
-            if (bmiValue <= 16) {
-                progressValue = 0;
-            } else if (bmiValue >= 35) {
-                progressValue = 100;
+            if (bmiValue >= 0) {
+                bmiValueTextView.setText(String.format("BMI: %.1f", bmiValue));
+                bmiStatusTextView.setText("Category: " + bmiCategory);
+
+                int progressValue;
+                if (bmiValue <= 16) {
+                    progressValue = 0;
+                } else if (bmiValue >= 35) {
+                    progressValue = 100;
+                } else {
+                    progressValue = (int)((bmiValue - 16) * (100.0 / (35 - 16)));
+                }
+                bmiIndicator.setProgress(progressValue);
+
+                int color;
+                if (bmiCategory.equals("Normal")) {
+                    color = ContextCompat.getColor(this, R.color.progress_healthy);
+                } else if (bmiCategory.equals("Underweight") || bmiCategory.equals("Severely Underweight")) {
+                    color = ContextCompat.getColor(this, android.R.color.holo_blue_dark);
+                } else {
+                    color = ContextCompat.getColor(this, android.R.color.holo_red_dark);
+                }
+                bmiIndicator.setIndicatorColor(color);
+
             } else {
-                progressValue = (int)((bmiValue - 16) * (100.0 / (35 - 16)));
+                bmiValueTextView.setText("BMI: Not calculated");
+                bmiStatusTextView.setText("Tap BMI Calculator to check your BMI");
+                bmiIndicator.setProgress(50);
+                bmiIndicator.setIndicatorColor(ContextCompat.getColor(this, R.color.primary_color));
             }
-            bmiIndicator.setProgress(progressValue);
-
-            // Set color based on category
-            int color;
-            if (bmiCategory.equals("Normal")) {
-                color = ContextCompat.getColor(this, R.color.progress_healthy); // Green for normal
-            } else if (bmiCategory.equals("Underweight") || bmiCategory.equals("Severely Underweight")) {
-                color = ContextCompat.getColor(this, android.R.color.holo_blue_dark); // Blue for underweight
-            } else {
-                color = ContextCompat.getColor(this, android.R.color.holo_red_dark); // Red for overweight/obese
-            }
-            bmiIndicator.setIndicatorColor(color);
-
-        } else {
-            // BMI not calculated yet
-            bmiValueTextView.setText("BMI: Not calculated");
-            bmiStatusTextView.setText("Tap BMI Calculator to check your BMI");
-            bmiIndicator.setProgress(50); // Neutral position
-            bmiIndicator.setIndicatorColor(ContextCompat.getColor(this, R.color.primary_color));
         }
     }
+
 
     private void updateUserNameDisplay() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -185,5 +222,14 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, PharmaciesActivity.class);
             startActivity(intent);
         });
+
+
+        MaterialCardView medicationsCardView = findViewById(R.id.card_track_medications);
+        medicationsCardView.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TrackMedicationsActivity.class);
+            startActivity(intent);
+        });
+
+
     }
 }
