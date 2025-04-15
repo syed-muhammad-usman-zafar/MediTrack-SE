@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.kotlin.android)
+
 }
 
 android {
@@ -30,6 +32,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
 dependencies {
@@ -40,17 +45,25 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-
+    implementation("com.squareup.picasso:picasso:2.8")
+    implementation("com.google.code.gson:gson:2.8.8")
     implementation(libs.okhttp)
     implementation(libs.gson)
+
+
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.glide)
 
     // Add these lines
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.play.services.location)
     implementation(libs.firebase.database)
+    implementation(libs.core.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
+
+
