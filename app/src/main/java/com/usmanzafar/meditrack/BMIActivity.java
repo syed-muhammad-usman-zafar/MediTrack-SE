@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class BMIActivity extends AppCompatActivity {
     private TextInputEditText weightInput, heightFeetInput, heightInchesInput;
@@ -111,12 +113,17 @@ public class BMIActivity extends AppCompatActivity {
             // Apply text
             suggestionText.setText(suggestion);
 
-            // Save BMI value and category to SharedPreferences
-            SharedPreferences sharedPreferences = getSharedPreferences(BMI_PREFS, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putFloat(BMI_VALUE, (float) BMI);
-            editor.putString(BMI_CATEGORY, category);
-            editor.apply();
+            // Save BMI value and category to SharedPreferences with UID
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                String uid = currentUser.getUid(); // Unique user ID
+
+                SharedPreferences sharedPreferences = getSharedPreferences(BMI_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putFloat(BMI_VALUE + "_" + uid, (float) BMI);
+                editor.putString(BMI_CATEGORY + "_" + uid, category);
+                editor.apply();
+            }
 
         } catch (NumberFormatException e) {
             resultText.setText("Please enter valid numbers");
