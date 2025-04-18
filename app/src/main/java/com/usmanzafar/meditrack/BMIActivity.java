@@ -1,5 +1,6 @@
 package com.usmanzafar.meditrack;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,7 +54,29 @@ public class BMIActivity extends AppCompatActivity {
                 calculateBMI();
             }
         });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            Intent intent = null;
+            if (id == R.id.nav_home) {
+                intent = new Intent(BMIActivity.this, MainActivity.class);
+            }
+            else if (id == R.id.nav_calendar) {
+                intent = new Intent(BMIActivity.this, CalendarActivity.class);
+            }else if (id == R.id.nav_profile) {
+                intent = new Intent(BMIActivity.this, UserProfileActivity.class);
+            }
 
+
+
+            if (intent != null) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // <--- smoother transition
+                startActivity(intent);
+                return true;
+            }
+
+            return false;
+        });
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
     }
 

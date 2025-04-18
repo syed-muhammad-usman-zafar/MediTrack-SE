@@ -56,22 +56,23 @@
         android:textColor="@color/text_primary"/>
 
     <!-- Button to Fetch Nutrition Data -->
+
+    <!-- Display Nutrition Information -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fetch_nutrition"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Get Nutrition Info"
-        android:backgroundTint="@color/primary_color"
-        android:textColor="@color/white"
-        android:padding="12dp"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/primary_color"
+        android:padding="12dp"
+        android:text="Get Nutrition Info"
+        android:textColor="@color/white"
         app:cornerRadius="8dp"
-        app:layout_constraintTop_toBottomOf="@id/food_weight"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/food_weight" />
 
-    <!-- Display Nutrition Information -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/nutrition_card"
         android:layout_width="match_parent"
@@ -111,4 +112,15 @@
                 android:textColor="@color/text_primary"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <!-- Add Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
