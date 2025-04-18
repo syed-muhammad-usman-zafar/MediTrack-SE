@@ -1,9 +1,11 @@
 package com.usmanzafar.meditrack;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -14,8 +16,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.annotations.SerializedName;
-
+import android.view.MenuItem;
 import java.util.List;
 
 import retrofit2.Call;
@@ -99,7 +102,36 @@ public class PharmaciesActivity extends AppCompatActivity {
 
         getFindPharmaciesButton.setOnClickListener(v -> fetchPharmacies());
 
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            Intent intent = null;
+            if (id == R.id.nav_home) {
+                intent = new Intent(PharmaciesActivity.this, MainActivity.class);
+            }
+            else if (id == R.id.nav_calendar) {
+                intent = new Intent(PharmaciesActivity.this, CalendarActivity.class);
+            }else if (id == R.id.nav_profile) {
+                intent = new Intent(PharmaciesActivity.this, UserProfileActivity.class);
+            }
+
+
+
+            if (intent != null) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // <--- smoother transition
+                startActivity(intent);
+                return true;
+            }
+
+            return false;
+        });
+
+
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+
+
+
     }
 
     private void fetchPharmacies() {
@@ -151,6 +183,20 @@ public class PharmaciesActivity extends AppCompatActivity {
             textView.setLayoutParams(params);
 
             pharmacyContainer.addView(textView);
+
+
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle the back button on toolbar
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

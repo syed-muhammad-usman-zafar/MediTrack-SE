@@ -84,28 +84,21 @@ class TrackMedicationsActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigation.selectedItemId = R.id.nav_medications
+        bottomNavigation.selectedItemId = R.id.nav_calendar
 
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    // Navigate to Home
-                    finish()
-                    true
-                }
-                R.id.nav_medications -> {
-                    // We're already here
-                    true
-                }
-                R.id.nav_calendar -> {
-                    // Navigate to Calendar
-                    val intent = Intent(this, CalendarActivity::class.java)
+                    val intent = Intent(this@TrackMedicationsActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
                     startActivity(intent)
                     true
                 }
-                R.id.nav_profile -> {
-                    // Navigate to Profile
-                    finish()
+
+                R.id.nav_calendar -> {
+                    val intent = Intent(this@TrackMedicationsActivity, CalendarActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    startActivity(intent)
                     true
                 }
                 else -> false

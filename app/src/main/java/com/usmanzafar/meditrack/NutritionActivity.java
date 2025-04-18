@@ -1,6 +1,7 @@
 package com.usmanzafar.meditrack;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
@@ -121,7 +123,34 @@ public class NutritionActivity extends AppCompatActivity {
 
         // Initialize location services
         getCurrentLocation();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            Intent intent = null;
+            if (id == R.id.nav_home) {
+                intent = new Intent(NutritionActivity.this, MainActivity.class);
+            }
+            else if (id == R.id.nav_calendar) {
+                intent = new Intent(NutritionActivity.this, CalendarActivity.class);
+            }else if (id == R.id.nav_profile) {
+                intent = new Intent(NutritionActivity.this, UserProfileActivity.class);
+            }
+
+
+
+            if (intent != null) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // <--- smoother transition
+                startActivity(intent);
+                return true;
+            }
+
+            return false;
+        });
+
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+
+
     }
 
     private void fetchNutritionData(String foodItem, double foodWeight) {

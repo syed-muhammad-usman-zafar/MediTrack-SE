@@ -77,11 +77,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Intent intent = null;
-            if (id == R.id.nav_medications) {
-                intent = new Intent(MainActivity.this, TrackMedicationsActivity.class);
-            } else if (id == R.id.nav_calendar) {
+            if (id == R.id.nav_calendar) {
                 intent = new Intent(MainActivity.this, CalendarActivity.class);
+            }else if (id == R.id.nav_profile) {
+                intent = new Intent(MainActivity.this, UserProfileActivity.class);
             }
+
 
 
             if (intent != null) {
@@ -224,9 +225,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        MaterialCardView medicationsCardView = findViewById(R.id.card_track_medications);
-        medicationsCardView.setOnClickListener(v -> {
+        MaterialCardView trackingCardView = findViewById(R.id.card_track_medications);
+        trackingCardView.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, TrackMedicationsActivity.class);
+            startActivity(intent);
+        });
+
+        MaterialCardView medicationsCardView = findViewById(R.id.card_pill_info);
+        medicationsCardView.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, Pill_InfoActivity.class);
             startActivity(intent);
         });
 

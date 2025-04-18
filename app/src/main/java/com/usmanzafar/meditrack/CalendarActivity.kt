@@ -1,5 +1,6 @@
 package com.usmanzafar.meditrack
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -172,22 +173,20 @@ class CalendarActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    // Navigate to Home Activity
-                    finish()
+                    val intent = Intent(this@CalendarActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    startActivity(intent)
                     true
                 }
-                R.id.nav_medications -> {
-                    // Navigate to Medications Activity
-                    finish()
-                    true
-                }
+
                 R.id.nav_calendar -> {
                     // We're already here
                     true
                 }
                 R.id.nav_profile -> {
-                    // Navigate to Profile Activity
-                    finish()
+                    val intent = Intent(this@CalendarActivity, UserProfileActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    startActivity(intent)
                     true
                 }
                 else -> false
