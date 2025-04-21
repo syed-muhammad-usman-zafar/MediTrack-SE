@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -18,7 +19,7 @@ object MediaStoreHelper {
     fun saveImageToMediaStore(context: Context, folderName: String, imageUri: Uri): String? {
         try {
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-            val fileName = "SharedFast_${folderName}_$timeStamp.jpg"
+            val fileName = "MediTrack_${folderName}_$timeStamp.jpg"
 
             // Create appropriate ContentValues
             val contentValues = ContentValues().apply {
@@ -28,7 +29,7 @@ object MediaStoreHelper {
                 // For Android 10 and above, use RELATIVE_PATH
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     put(MediaStore.Images.Media.RELATIVE_PATH,
-                        Environment.DIRECTORY_PICTURES + "/SharedFast/$folderName")
+                        Environment.DIRECTORY_PICTURES + "/MediTrack/$folderName")
                 }
             }
 
@@ -37,16 +38,21 @@ object MediaStoreHelper {
             val destinationUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
             if (destinationUri != null) {
-                // Copy input stream to output stream
-                resolver.openInputStream(imageUri)?.use { input ->
-                    resolver.openOutputStream(destinationUri)?.use { output ->
-                        input.copyTo(output)
+                try {
+                    // Copy input stream to output stream
+                    resolver.openInputStream(imageUri)?.use { input ->
+                        resolver.openOutputStream(destinationUri)?.use { output ->
+                            input.copyTo(output)
+                        }
                     }
+                    return destinationUri.toString()
+                } catch (e: Exception) {
+                    Log.e("MediaStoreHelper", "Error saving image: ${e.message}", e)
+                    resolver.delete(destinationUri, null, null)
                 }
-                return destinationUri.toString()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("MediaStoreHelper", "Error in saveImageToMediaStore: ${e.message}", e)
         }
         return null
     }
@@ -54,7 +60,10 @@ object MediaStoreHelper {
     fun saveCapturedImageToMediaStore(context: Context, folderName: String, sourcePath: String): String? {
         try {
             val sourceFile = File(sourcePath)
-            if (!sourceFile.exists()) return null
+            if (!sourceFile.exists()) {
+                Log.e("MediaStoreHelper", "Source file does not exist: $sourcePath")
+                return null
+            }
 
             val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val fileName = "MediTrack_${folderName}_$timeStamp.jpg"
@@ -67,7 +76,7 @@ object MediaStoreHelper {
                 // For Android 10 and above, use RELATIVE_PATH
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     put(MediaStore.Images.Media.RELATIVE_PATH,
-                        Environment.DIRECTORY_PICTURES + "/SharedFast/$folderName")
+                        Environment.DIRECTORY_PICTURES + "/MediTrack/$folderName")
                 }
             }
 
@@ -76,15 +85,25 @@ object MediaStoreHelper {
             val destinationUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
             if (destinationUri != null) {
-                // Copy source file to destination
-                val bitmap = BitmapFactory.decodeFile(sourcePath)
-                resolver.openOutputStream(destinationUri)?.use { output ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, output)
+                try {
+                    // Copy source file to destination
+                    val bitmap = BitmapFactory.decodeFile(sourcePath)
+                    if (bitmap != null) {
+                        resolver.openOutputStream(destinationUri)?.use { output ->
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, output)
+                        }
+                        return destinationUri.toString()
+                    } else {
+                        Log.e("MediaStoreHelper", "Failed to decode bitmap from $sourcePath")
+                        resolver.delete(destinationUri, null, null)
+                    }
+                } catch (e: Exception) {
+                    Log.e("MediaStoreHelper", "Error saving captured image: ${e.message}", e)
+                    resolver.delete(destinationUri, null, null)
                 }
-                return destinationUri.toString()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("MediaStoreHelper", "Error in saveCapturedImageToMediaStore: ${e.message}", e)
         }
         return null
     }

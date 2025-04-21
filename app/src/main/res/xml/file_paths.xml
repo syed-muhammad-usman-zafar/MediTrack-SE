@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-files-path name="my_images" path="." />
+    <external-path name="my_pictures" path="Pictures/MediTrack" />
+    <files-path name="app_files" path="." />
+    <cache-path name="cache_files" path="." />
+</paths>

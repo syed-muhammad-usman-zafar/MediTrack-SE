@@ -2,13 +2,16 @@ package com.usmanzafar.meditrack
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +26,10 @@ import java.util.Locale
 
 class ImageActivity : AppCompatActivity() {
 
+    companion object {
+        private const val CAMERA_PERMISSION_CODE = 101
+    }
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var imageAdapter: ImageAdapter
     private lateinit var searchView: SearchView
@@ -33,9 +40,12 @@ class ImageActivity : AppCompatActivity() {
 
     // Create a temporary file for camera photos
     private fun createImageFile(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_msys", Locale.getDefault()).format(Date())
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val imageFileName = "JPEG_${timeStamp}_"
         val storageDir = getExternalFilesDir(null)
+        if (storageDir != null && !storageDir.exists()) {
+            storageDir.mkdirs()
+        }
         return File.createTempFile(
             imageFileName, ".jpg", storageDir
         ).apply {
@@ -54,7 +64,7 @@ class ImageActivity : AppCompatActivity() {
             )
 
             if (mediaSavedPath != null) {
-                val timeStamp = SimpleDateFormat("yyyyMMdd_msys", Locale.getDefault()).format(Date())
+                val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
                 val newImage = ImageData(mediaSavedPath, "Image $timeStamp", timeStamp)
                 imageList.add(newImage)
 
@@ -79,7 +89,7 @@ class ImageActivity : AppCompatActivity() {
             val mediaSavedPath = MediaStoreHelper.saveImageToMediaStore(this, folderName, it)
 
             if (mediaSavedPath != null) {
-                val timeStamp = SimpleDateFormat("yyyyMMdd_msys", Locale.getDefault()).format(Date())
+                val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
                 val newImage = ImageData(mediaSavedPath, "Image $timeStamp", timeStamp)
                 imageList.add(newImage)
 
@@ -160,7 +170,6 @@ class ImageActivity : AppCompatActivity() {
             }
         )
 
-
         recyclerView.adapter = imageAdapter
 
         // Set up buttons
@@ -173,17 +182,53 @@ class ImageActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.btnCaptureImage).setOnClickListener {
+            checkCameraPermission()
+        }
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+    }
+
+    private fun checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_CODE
+            )
+        } else {
+            openCamera()
+        }
+    }
+
+    private fun openCamera() {
+        try {
             val photoFile = createImageFile()
             val photoURI = FileProvider.getUriForFile(
                 this,
-                "com.example.shared fast.fileprovider",
+                "com.usmanzafar.meditrack.fileprovider",
                 photoFile
             )
             takePictureLauncher.launch(photoURI)
+        } catch (e: Exception) {
+            Log.e("ImageActivity", "Camera error: ${e.message}", e)
+            Toast.makeText(this, "Camera error: ${e.message}", Toast.LENGTH_LONG).show()
         }
+    }
 
-
-        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                openCamera()
+            } else {
+                Toast.makeText(this, "Camera permission is required to take pictures", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     // Updated method to delete a image
@@ -243,14 +288,12 @@ class ImageActivity : AppCompatActivity() {
                 image.date.lowercase().contains(searchQuery)
     }
 
-
-
     // Update the saveImagesToPreferences method
     private fun saveImagesToPreferences() {
         val imagePaths = imageList.map { it.path }
 
         // Use SharedPreferences directly to save the updated list
-        val sharedPreferences = getSharedPreferences("SharedFastPrefs", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("MediTrackPrefs", MODE_PRIVATE)
 
         // Get the current folder list
         val gson = Gson()
