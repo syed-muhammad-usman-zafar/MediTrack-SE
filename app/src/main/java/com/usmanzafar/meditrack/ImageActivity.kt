@@ -17,6 +17,7 @@ import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -37,6 +38,8 @@ class ImageActivity : AppCompatActivity() {
     private var filteredImageList = mutableListOf<ImageData>()
     private var folderName: String = ""
     private var currentPhotoPath: String = ""
+    private val folderKey = "folderList"
+    private lateinit var currentUserId: String
 
     // Create a temporary file for camera photos
     private fun createImageFile(): File {
@@ -133,6 +136,16 @@ class ImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_folder)
+
+        // Get the current user ID
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "User not authenticated. Please login again.", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+        currentUserId = currentUser.uid
+
 
         // Get folder name from intent
         folderName = intent.getStringExtra("folder_name") ?: "Unnamed Folder"
@@ -288,16 +301,16 @@ class ImageActivity : AppCompatActivity() {
                 image.date.lowercase().contains(searchQuery)
     }
 
-    // Update the saveImagesToPreferences method
+    // Fixed method to save images while preserving schedule information
     private fun saveImagesToPreferences() {
         val imagePaths = imageList.map { it.path }
 
         // Use SharedPreferences directly to save the updated list
         val sharedPreferences = getSharedPreferences("MediTrackPrefs", MODE_PRIVATE)
 
-        // Get the current folder list
+        // Get the current folder list with user-specific key
         val gson = Gson()
-        val json = sharedPreferences.getString("folderList", null)
+        val json = sharedPreferences.getString("${folderKey}_${currentUserId}", null)
         val type = object : TypeToken<MutableList<FolderData>>() {}.type
         val folderList: MutableList<FolderData> = if (json != null) {
             gson.fromJson(json, type)
@@ -305,20 +318,22 @@ class ImageActivity : AppCompatActivity() {
             mutableListOf()
         }
 
-        // Update the specific folder
+        // Update the specific folder while preserving schedule
         val folderIndex = folderList.indexOfFirst { it.name == folderName }
         if (folderIndex != -1) {
-            // Update existing folder
-            folderList[folderIndex] = FolderData(folderName, imagePaths)
+            // Get the existing schedule
+            val existingSchedule = folderList[folderIndex].schedule
+            // Update existing folder with new images but keep schedule
+            folderList[folderIndex] = FolderData(folderName, imagePaths, existingSchedule)
         } else {
-            // Add new folder
-            folderList.add(FolderData(folderName, imagePaths))
+            // Add new folder with empty schedule
+            folderList.add(FolderData(folderName, imagePaths, mutableListOf()))
         }
 
-        // Save back to SharedPreferences
+        // Save back to SharedPreferences with user-specific key
         val editor = sharedPreferences.edit()
         val updatedJson = gson.toJson(folderList)
-        editor.putString("folderList", updatedJson)
+        editor.putString("${folderKey}_${currentUserId}", updatedJson)
         editor.apply()
 
         // Also prepare result intent for when activity finishes

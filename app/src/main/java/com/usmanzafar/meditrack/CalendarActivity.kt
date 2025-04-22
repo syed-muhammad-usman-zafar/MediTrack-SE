@@ -3,6 +3,7 @@ package com.usmanzafar.meditrack
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -16,6 +17,7 @@ import java.util.*
 import androidx.appcompat.widget.Toolbar
 import android.widget.CalendarView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.google.firebase.auth.FirebaseAuth
 import java.time.DayOfWeek
@@ -37,12 +39,18 @@ class CalendarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
 
+        // Ensure user is authenticated
         val currentUser = FirebaseAuth.getInstance().currentUser
-        currentUserId = currentUser?.uid ?: "anonymous"
+        if (currentUser == null) {
+            Toast.makeText(this, "User not authenticated. Please login again.", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+        currentUserId = currentUser.uid
 
+        // Initialize shared preferences
         sharedPreferences = getSharedPreferences("MediTrackPrefs", MODE_PRIVATE)
-
-
 
         // Initialize views
         calendarView = findViewById(R.id.calendarView)
@@ -55,8 +63,8 @@ class CalendarActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Medication Calendar"
 
-        // Load medications data
-        loadFolders()
+        // Load medications data - make sure this is called after currentUserId is set
+        loadUserFolders()
 
         // Set up bottom navigation
         setupBottomNavigation()
@@ -67,7 +75,21 @@ class CalendarActivity : AppCompatActivity() {
         // Display medications for the current date
         displayMedicationsForDate(System.currentTimeMillis())
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        // Always get the latest user and reload data
+        FirebaseAuth.getInstance().currentUser?.let {
+            currentUserId = it.uid
+            loadUserFolders()
+            displayMedicationsForDate(calendarView.date)
+        } ?: run {
+            // If somehow there's no user on resume, return to login
+            Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
     }
 
     private fun setupCalendarListener() {
@@ -79,6 +101,9 @@ class CalendarActivity : AppCompatActivity() {
     }
 
     private fun displayMedicationsForDate(dateInMillis: Long) {
+        // Make sure we have the latest user data before displaying
+        loadUserFolders()
+
         // Clear previous medications
         medicationListLayout.removeAllViews()
 
@@ -117,6 +142,11 @@ class CalendarActivity : AppCompatActivity() {
 
     private fun findMedicationsForDay(dayOfWeek: Int): List<ScheduledMedication> {
         val medicationsForDay = mutableListOf<ScheduledMedication>()
+
+        // Double check that we're using the correct user data
+        if (folderList.isEmpty()) {
+            loadUserFolders()
+        }
 
         // Ensure that folderList is not empty
         for (folder in folderList) {
@@ -194,16 +224,42 @@ class CalendarActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadFolders() {
-        val gson = Gson()
-        // Use user-specific key to load data
-        val json = sharedPreferences.getString("${folderKey}_${currentUserId}", null)
-        val type = object : TypeToken<MutableList<FolderData>>() {}.type
+    // Renamed to make it clearer this loads user-specific data
+    private fun loadUserFolders() {
+        try {
+            // Safety check - make sure we have a current user ID
+            if (!::currentUserId.isInitialized || currentUserId.isEmpty()) {
+                FirebaseAuth.getInstance().currentUser?.let {
+                    currentUserId = it.uid
+                } ?: run {
+                    // No user found, returning empty list
+                    folderList = mutableListOf()
+                    return
+                }
+            }
 
-        folderList = if (json != null) {
-            gson.fromJson(json, type)
-        } else {
-            mutableListOf()
+            val gson = Gson()
+            // Use user-specific key to load data
+            val userSpecificKey = "${folderKey}_${currentUserId}"
+            val json = sharedPreferences.getString(userSpecificKey, null)
+
+            // Log retrieval key for debugging
+            Log.d("CalendarActivity", "Loading user data with key: $userSpecificKey")
+
+            val type = object : TypeToken<MutableList<FolderData>>() {}.type
+
+            folderList = if (json != null) {
+                gson.fromJson(json, type)
+            } else {
+                mutableListOf()
+            }
+
+            // Log how many folders were loaded
+            Log.d("CalendarActivity", "Loaded ${folderList.size} folders for user $currentUserId")
+
+        } catch (e: Exception) {
+            Log.e("CalendarActivity", "Error loading folders: ${e.message}", e)
+            folderList = mutableListOf()
         }
     }
 }

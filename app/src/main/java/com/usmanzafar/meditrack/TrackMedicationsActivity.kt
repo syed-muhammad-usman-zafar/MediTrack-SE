@@ -14,6 +14,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.content.SharedPreferences
 import android.net.Uri
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.SearchView
@@ -27,6 +28,7 @@ import com.google.android.material.chip.ChipGroup
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.appcompat.widget.Toolbar
 
 class TrackMedicationsActivity : AppCompatActivity() {
 
@@ -42,10 +44,22 @@ class TrackMedicationsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_track_medications)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
+        }
 
 
         val currentUser = FirebaseAuth.getInstance().currentUser
-        currentUserId = currentUser?.uid ?: "anonymous"
+        if (currentUser == null) {
+            Toast.makeText(this, "User not authenticated. Please login again.", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+        currentUserId = currentUser.uid
+
 
         sharedPreferences = getSharedPreferences("MediTrackPrefs", MODE_PRIVATE);
 
@@ -144,24 +158,18 @@ class TrackMedicationsActivity : AppCompatActivity() {
                 val folderName = data.getStringExtra("folder_name") ?: return@let
                 val folderImages = data.getStringArrayListExtra("folder_images") ?: return@let
 
-                // Update folder in the list
-                val folderIndex = folderList.indexOfFirst { it.name == folderName }
-                if (folderIndex != -1) {
-                    // Preserve the schedule when updating images
-                    val currentSchedule = folderList[folderIndex].schedule
-                    folderList[folderIndex] = FolderData(folderName, folderImages, currentSchedule)
+                // Reload folders from SharedPreferences to get latest schedule & images
+                loadFolders()
 
-                    // Update filtered list if folder is there
-                    val filteredIndex = filteredFolderList.indexOfFirst { it.name == folderName }
-                    if (filteredIndex != -1) {
-                        filteredFolderList[filteredIndex] = FolderData(folderName, folderImages, currentSchedule)
-                        folderAdapter.notifyItemChanged(filteredIndex)
-                    }
-                    saveFolders()
-                }
+                // Update filtered list based on the new data
+                filteredFolderList.clear()
+                filteredFolderList.addAll(folderList)
+
+                folderAdapter.notifyDataSetChanged()
             }
         }
     }
+
 
     private fun onFolderClicked(folder: FolderData) {
         // Pass the folder details to the FolderActivity
@@ -448,4 +456,16 @@ class TrackMedicationsActivity : AppCompatActivity() {
             mutableListOf()
         }
     }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle the back button on toolbar
+        return if (item.itemId == android.R.id.home) {
+            finish()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
 }
