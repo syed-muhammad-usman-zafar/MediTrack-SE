@@ -2,6 +2,7 @@ package com.usmanzafar.meditrack;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,11 +11,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +35,7 @@ import java.util.Locale;
 public class UserProfileActivity extends AppCompatActivity {
 
     private TextView nameTextView, emailInput, dobTextView, ageTextView;
-    private Button forgotPasswordBtn;
+    private Button logoutBtn;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -40,7 +43,13 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
+        // Set up toolbar with back button
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -50,7 +59,8 @@ public class UserProfileActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.profile_email);
         dobTextView = findViewById(R.id.profile_dob);
         ageTextView = findViewById(R.id.profile_age);
-        forgotPasswordBtn = findViewById(R.id.forgot_password);
+        Button forgotPasswordBtn = findViewById(R.id.forgot_password);
+
 
         forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +99,16 @@ public class UserProfileActivity extends AppCompatActivity {
 
             return false;
         });
+        Button logoutBtn = findViewById(R.id.btnlogout);
+        logoutBtn.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(UserProfileActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+
+
     }
 
     private void loadUserProfile() {
@@ -176,4 +196,15 @@ public class UserProfileActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle the back button on toolbar
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
