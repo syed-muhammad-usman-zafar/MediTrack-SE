@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         //circle indicator intializer
         bmiIndicator = findViewById(R.id.bmi_indicator);
-
         // Set user name
         updateUserNameDisplay();
 
@@ -147,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 bmiValueTextView.setText("BMI: Not calculated");
                 bmiStatusTextView.setText("Tap BMI Calculator to check your BMI");
-                bmiIndicator.setProgress(50);
-                bmiIndicator.setIndicatorColor(ContextCompat.getColor(this, R.color.primary_color));
+                bmiIndicator.setProgress(0);
+                bmiIndicator.setIndicatorColor(ContextCompat.getColor(this, R.color.progress_undefined));
             }
         }
     }
