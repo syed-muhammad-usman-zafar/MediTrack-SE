@@ -2,8 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -128,6 +127,103 @@
                 android:text="Sat" />
 
         </com.google.android.material.chip.ChipGroup>
+
+        <!--Start Date Field -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start date"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/startDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:text="Apr 28, 2025"
+            android:textSize="16sp"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:layout_marginBottom="16dp" />
+
+        <!--Duration Options -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Duration"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/durationRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radioIndefinite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Indefinite (no end date)"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radioDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="For a specific number of days" />
+
+            <LinearLayout
+                android:id="@+id/durationInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/durationInput"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input"
+                    android:hint="Number of days"
+                    android:inputType="number"
+                    android:padding="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" days"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/radioEndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Until a specific date" />
+        </RadioGroup>
+
+        <!-- End Date Field -->
+        <TextView
+            android:id="@+id/endDateTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:text="Not specified"
+            android:textSize="16sp"
+            android:drawableEnd="@drawable/ic_calendar"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
 
     </LinearLayout>
 </ScrollView>
