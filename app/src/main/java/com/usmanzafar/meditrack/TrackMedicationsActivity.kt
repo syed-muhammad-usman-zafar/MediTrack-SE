@@ -9,11 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.view.LayoutInflater
 import android.content.SharedPreferences
 import android.net.Uri
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
@@ -205,18 +208,133 @@ class TrackMedicationsActivity : AppCompatActivity() {
         val notesInput: EditText = dialogView.findViewById(R.id.notesInput)
         val daysChipGroup: ChipGroup = dialogView.findViewById(R.id.daysChipGroup)
 
+        // New duration fields
+        val startDateTextView: TextView = dialogView.findViewById(R.id.startDateTextView)
+        val endDateTextView: TextView = dialogView.findViewById(R.id.endDateTextView)
+        val durationRadioGroup: RadioGroup = dialogView.findViewById(R.id.durationRadioGroup)
+        val durationInputLayout: LinearLayout = dialogView.findViewById(R.id.durationInputLayout)
+        val durationInput: EditText = dialogView.findViewById(R.id.durationInput)
+
         // Set current time
         val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
-        timeTextView.text = formatTime(hour, minute)
+
+        // Format and set the default start date (today)
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        startDateTextView.text = dateFormat.format(calendar.time)
+
+        // Default end date is empty/unspecified
+        endDateTextView.text = "Not specified"
 
         // Set time picker on click
+        timeTextView.text = formatTime(hour, minute)
         timeTextView.setOnClickListener {
             TimePickerDialog(this, { _, selectedHour, selectedMinute ->
                 timeTextView.text = formatTime(selectedHour, selectedMinute)
             }, hour, minute, false).show()
         }
+
+        // Set start date picker
+        startDateTextView.setOnClickListener {
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                calendar.set(selectedYear, selectedMonth, selectedDay)
+                startDateTextView.text = dateFormat.format(calendar.time)
+
+                // If we have a duration set, update the end date
+                if (durationRadioGroup.checkedRadioButtonId == R.id.radioDuration && durationInput.text.isNotEmpty()) {
+                    try {
+                        val durationDays = durationInput.text.toString().toInt()
+                        val endCal = Calendar.getInstance()
+                        endCal.timeInMillis = calendar.timeInMillis
+                        endCal.add(Calendar.DAY_OF_YEAR, durationDays)
+                        endDateTextView.text = dateFormat.format(endCal.time)
+                    } catch (e: NumberFormatException) {
+                        // Ignore invalid input
+                    }
+                }
+            }, year, month, day).show()
+        }
+
+        // Set end date picker
+        endDateTextView.setOnClickListener {
+            // Only allow clicking if "Specific end date" is selected
+            if (durationRadioGroup.checkedRadioButtonId == R.id.radioEndDate) {
+                DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                    val endCal = Calendar.getInstance()
+                    endCal.set(selectedYear, selectedMonth, selectedDay)
+                    endDateTextView.text = dateFormat.format(endCal.time)
+                }, year, month, day).show()
+            }
+        }
+
+        // Handle radio button logic
+        durationRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.radioIndefinite -> {
+                    durationInputLayout.visibility = View.GONE
+                    endDateTextView.text = "Not specified"
+                    endDateTextView.isClickable = false
+                }
+                R.id.radioDuration -> {
+                    durationInputLayout.visibility = View.VISIBLE
+                    endDateTextView.isClickable = false
+                    // Update end date if we have a valid duration
+                    if (durationInput.text.isNotEmpty()) {
+                        try {
+                            val durationDays = durationInput.text.toString().toInt()
+                            val startCal = Calendar.getInstance()
+                            // Parse start date
+                            try {
+                                startCal.time = dateFormat.parse(startDateTextView.text.toString()) ?: calendar.time
+                            } catch (e: Exception) {
+                                startCal.timeInMillis = System.currentTimeMillis()
+                            }
+                            val endCal = Calendar.getInstance()
+                            endCal.timeInMillis = startCal.timeInMillis
+                            endCal.add(Calendar.DAY_OF_YEAR, durationDays)
+                            endDateTextView.text = dateFormat.format(endCal.time)
+                        } catch (e: NumberFormatException) {
+                            endDateTextView.text = "Invalid duration"
+                        }
+                    }
+                }
+                R.id.radioEndDate -> {
+                    durationInputLayout.visibility = View.GONE
+                    endDateTextView.text = "Tap to set end date"
+                    endDateTextView.isClickable = true
+                }
+            }
+        }
+
+        // Listen for duration changes to update end date
+        durationInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (durationRadioGroup.checkedRadioButtonId == R.id.radioDuration && !s.isNullOrEmpty()) {
+                    try {
+                        val durationDays = s.toString().toInt()
+                        val startCal = Calendar.getInstance()
+                        // Parse start date
+                        try {
+                            startCal.time = dateFormat.parse(startDateTextView.text.toString()) ?: calendar.time
+                        } catch (e: Exception) {
+                            startCal.timeInMillis = System.currentTimeMillis()
+                        }
+                        val endCal = Calendar.getInstance()
+                        endCal.timeInMillis = startCal.timeInMillis
+                        endCal.add(Calendar.DAY_OF_YEAR, durationDays)
+                        endDateTextView.text = dateFormat.format(endCal.time)
+                    } catch (e: NumberFormatException) {
+                        endDateTextView.text = "Invalid duration"
+                    }
+                }
+            }
+        })
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("Schedule ${folder.name}")
@@ -241,13 +359,70 @@ class TrackMedicationsActivity : AppCompatActivity() {
                 val dosage = dosageInput.text.toString().ifEmpty { "1 tablet" }
                 val notes = notesInput.text.toString()
 
-                // Create a new schedule
-                val newSchedule = MedicationSchedule(time = time, daysOfWeek = selectedDays, dosage = dosage, notes = notes)
+                // Parse start date
+                val startCal = Calendar.getInstance()
+                try {
+                    startCal.time = dateFormat.parse(startDateTextView.text.toString()) ?: calendar.time
+                } catch (e: Exception) {
+                    startCal.timeInMillis = System.currentTimeMillis()
+                }
+                val startDate = startCal.timeInMillis
+
+                // Determine end date based on radio selection
+                var endDate: Long? = null
+                when (durationRadioGroup.checkedRadioButtonId) {
+                    R.id.radioIndefinite -> {
+                        // No end date
+                        endDate = null
+                    }
+                    R.id.radioDuration -> {
+                        try {
+                            val durationDays = durationInput.text.toString().toInt()
+                            val endCal = Calendar.getInstance()
+                            endCal.timeInMillis = startDate
+                            endCal.add(Calendar.DAY_OF_YEAR, durationDays)
+                            endDate = endCal.timeInMillis
+                        } catch (e: NumberFormatException) {
+                            Toast.makeText(this, "Invalid duration, using indefinite schedule", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    R.id.radioEndDate -> {
+                        try {
+                            if (endDateTextView.text.toString() != "Tap to set end date" &&
+                                endDateTextView.text.toString() != "Not specified") {
+                                val endCal = Calendar.getInstance()
+                                endCal.time = dateFormat.parse(endDateTextView.text.toString()) ?: calendar.time
+                                endDate = endCal.timeInMillis
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(this, "Invalid end date, using indefinite schedule", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+                // Create a new schedule with start and end dates
+                val newSchedule = MedicationSchedule(
+                    time = time,
+                    daysOfWeek = selectedDays,
+                    dosage = dosage,
+                    notes = notes,
+                    startDate = startDate,
+                    endDate = endDate
+                )
 
                 // Update the folder with the new schedule
                 updateFolderSchedule(folder, newSchedule)
 
-                Toast.makeText(this, "${folder.name} scheduled for ${selectedDays.size} days", Toast.LENGTH_SHORT).show()
+                val durationMessage = when {
+                    endDate == null -> "indefinitely"
+                    else -> "until ${dateFormat.format(Date(endDate))}"
+                }
+
+                Toast.makeText(
+                    this,
+                    "${folder.name} scheduled for ${selectedDays.size} days a week, $durationMessage",
+                    Toast.LENGTH_LONG
+                ).show()
             }
             .setNegativeButton("Cancel", null)
             .create()
