@@ -1,29 +1,85 @@
 # MedTrack - Health Management Android App
 
-A comprehensive Android application for health tracking, BMI calculation, medication management, and pharmacy location.
+A comprehensive Android application for health tracking, BMI calculation, medication management, and pharmacy location services.
+
+---
 
 ## 📱 Key Features
-- **BMI Calculator** (`BMAActivity.java`)
-- **User Profile Management** (`UserProfileActivity.java`)
-- **Medication Tracker**
-- **Pharmacy Locator** (`PharmaciesActivity.java`)
-- **Nutrition Information** (`NutriNonActivity.java`)
-- **Image/Data Storage** (`ImageActivity.java`, `MediaStoreHelper.java`)
-- **Firebase Integration** (User authentication and data storage)
+
+- **Medication Tracker**  
+  - Upload medication
+  - Schedule medications and see them on calendar.
+  - Upload perscription of each medicine via image capture or file/image upload.
+  - Share perscription of each medication via Whatsapp/Facebook/Gmail/Bluetooth.
+  - Save perscription of each medication in phone gallery.
+  - Activity: `TrackMedicationsActivity.kt/ImageActivity.kt/CalendarActivity.kt/MediaStoreHelper.kt`
+
+- **BMI Calculator**  
+  - Calculate Body Mass Index easily.
+  - See progress indicator of bmi on main dashboard
+  - Activity: `BMAActivity.java/MainActivity.java`
+
+- **Pharmacy Locator**  
+  - Find nearby pharmacies using location services.
+  - Activity: `PharmaciesActivity.java`
+
+- **Nutrition Information**  
+  - Access basic nutritional guidance.
+  - Activity: `NutriNonActivity.java`
+  
+- **Medicine Information**  
+  - Access medicinal information of prescribed pill.
+  - Activity: `Pill_InfoActivity.java`
+
+- **User Profile Management**  
+  - Create and update user profiles.
+  - Activity: `UserProfileActivity.java`
+
+- **Firebase Integration**  
+  - User authentication and real-time data storage with Firebase.
+
+---
 
 ## 🛠️ Technical Stack
-- **Language**: Java
-- **Database**: Firebase Realtime Database
-- **Dependencies**:
-  - Glide (`com.github.bumptech.glide:glide:4.16.0`)
-  - Firebase SDK
-  - AndroidX Libraries
+
+- **Language:** Java, Kotlin
+- **Database:** Firebase Realtime Database
+
+
+---
 
 ## 🚀 Installation
+
 ```bash
 # Clone the repository
-git clone https://github.com/zainab-shah6/MedTrack.git
+git clone https://github.com/syed-muhammad-usman-zafar/MediTrack-SE.git
 
-# Open in Android Studio
+
+# Open the project in Android Studio
+
 # Sync Gradle dependencies
-# Build and run on emulator (API 35+ recommended)
+
+# Build and run the app on an emulator or a physical device
+# (API level 35+ is recommended)
+
+```
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request for improvements or suggestions.
+
+## 📧 Contact
+
+For any inquiries, reach out to: 
+- Usman Zafar via [LinkedIn](https://www.linkedin.com/in/usman--zafar/).
+- Fahd Asif via [LinkedIn](https://www.linkedin.com/in/fahd-asif-116923266/).
+- Zainab Shah via [LinkedIn](https://www.linkedin.com/in/zainab-shah-6389b7316/).
+- Syed Saad via [LinkedIn](https://www.linkedin.com/in/syed-saad-474932298/).
+- Hamd Umer via [LinkedIn](https://www.linkedin.com/in/hamd-umer-993525313/).
+
+
+
+
