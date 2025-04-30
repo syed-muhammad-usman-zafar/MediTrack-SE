@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:windowSoftInputMode="adjustResize"
+    tools:context=".Chatgpt">
+
+    <!-- RecyclerView for displaying messages -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="10dp" />
+
+    <!-- Welcome Text at the top -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcome_text"
+        android:layout_centerInParent="true"
+        android:text="Welcome to your Health support partner"
+        android:gravity="center"
+        android:textSize="25sp" />
+
+    <!-- Bottom Layout containing the EditText and Send Button -->
+    <RelativeLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <EditText
+            android:id="@+id/message_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="16dp"
+            android:hint="Type your message"
+            android:layout_toLeftOf="@+id/send_button"
+            android:background="@drawable/rounded_corner"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp" />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/send_button"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:padding="8dp"
+            android:src="@drawable/send"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+    </RelativeLayout>
+
+</RelativeLayout>
