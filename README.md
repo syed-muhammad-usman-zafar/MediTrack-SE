@@ -78,15 +78,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Contributions are welcome! Please open an issue or submit a pull request for improvements or suggestions.
 
-## 📧 Contact
 
-For any inquiries, reach out to: 
-- Usman Zafar via [LinkedIn](https://www.linkedin.com/in/usman--zafar/).
-- Fahd Asif via [LinkedIn](https://www.linkedin.com/in/fahd-asif-116923266/).
-<<<<<<< HEAD
-- Zainab Shah via [LinkedIn](https://www.linkedin.com/in/zainab-shah-6389b7316/).
-- Syed Saad via [LinkedIn](https://www.linkedin.com/in/syed-saad-474932298/).
-- Hamd Umer via [LinkedIn](https://www.linkedin.com/in/hamd-umer-993525313/).
 
 =======
 
