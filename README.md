@@ -52,7 +52,6 @@ A comprehensive Android application for health tracking, BMI calculation, medica
 
 ```bash
 # Clone the repository
-git clone https://github.com/syed-muhammad-usman-zafar/MediTrack
 # Open the project in Android Studio
 # Sync Gradle dependencies
 # Build and run the app on an emulator or a physical device
