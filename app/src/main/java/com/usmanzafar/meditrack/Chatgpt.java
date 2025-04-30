@@ -1,6 +1,10 @@
 package com.usmanzafar.meditrack;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.usmanzafar.meditrack.BuildConfig;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -9,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,6 +85,14 @@ public class Chatgpt extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatgpt);
 
+        // Set up toolbar with back button
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         messageditText = findViewById(R.id.message_edit_text);
         recyclerView = findViewById(R.id.recycler_view);
         send = findViewById(R.id.send_button);
@@ -105,6 +119,31 @@ public class Chatgpt extends AppCompatActivity {
                 Toast.makeText(this, "Please enter a message", Toast.LENGTH_SHORT).show();
             }
         });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            Intent intent = null;
+            if (id == R.id.nav_home) {
+                intent = new Intent(Chatgpt.this, MainActivity.class);
+            }
+            else if (id == R.id.nav_calendar) {
+                intent = new Intent(Chatgpt.this, CalendarActivity.class);
+            }else if (id == R.id.nav_profile) {
+                intent = new Intent(Chatgpt.this, UserProfileActivity.class);
+            }
+
+
+
+            if (intent != null) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // <--- smoother transition
+                startActivity(intent);
+                return true;
+            }
+
+            return false;
+        });
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
     }
 
     private void addToChat(String message, String sentBy) {
@@ -176,6 +215,15 @@ public class Chatgpt extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle the back button on toolbar
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
