@@ -170,42 +170,6 @@
                 android:checked="true" />
 
             <RadioButton
-                android:id="@+id/radioDuration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="For a specific number of days" />
-
-            <LinearLayout
-                android:id="@+id/durationInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:visibility="gone">
-
-                <EditText
-                    android:id="@+id/durationInput"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_input"
-                    android:hint="Number of days"
-                    android:inputType="number"
-                    android:padding="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" days"
-                    android:textSize="16sp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp" />
-            </LinearLayout>
-
-            <RadioButton
                 android:id="@+id/radioEndDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

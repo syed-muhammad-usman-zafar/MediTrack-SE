@@ -15,8 +15,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.content.SharedPreferences
 import android.net.Uri
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
@@ -212,8 +210,6 @@ class TrackMedicationsActivity : AppCompatActivity() {
         val startDateTextView: TextView = dialogView.findViewById(R.id.startDateTextView)
         val endDateTextView: TextView = dialogView.findViewById(R.id.endDateTextView)
         val durationRadioGroup: RadioGroup = dialogView.findViewById(R.id.durationRadioGroup)
-        val durationInputLayout: LinearLayout = dialogView.findViewById(R.id.durationInputLayout)
-        val durationInput: EditText = dialogView.findViewById(R.id.durationInput)
 
         // Set current time
         val calendar = Calendar.getInstance()
@@ -243,19 +239,6 @@ class TrackMedicationsActivity : AppCompatActivity() {
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
                 calendar.set(selectedYear, selectedMonth, selectedDay)
                 startDateTextView.text = dateFormat.format(calendar.time)
-
-                // If we have a duration set, update the end date
-                if (durationRadioGroup.checkedRadioButtonId == R.id.radioDuration && durationInput.text.isNotEmpty()) {
-                    try {
-                        val durationDays = durationInput.text.toString().toInt()
-                        val endCal = Calendar.getInstance()
-                        endCal.timeInMillis = calendar.timeInMillis
-                        endCal.add(Calendar.DAY_OF_YEAR, durationDays)
-                        endDateTextView.text = dateFormat.format(endCal.time)
-                    } catch (e: NumberFormatException) {
-                        // Ignore invalid input
-                    }
-                }
             }, year, month, day).show()
         }
 
@@ -275,66 +258,15 @@ class TrackMedicationsActivity : AppCompatActivity() {
         durationRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radioIndefinite -> {
-                    durationInputLayout.visibility = View.GONE
                     endDateTextView.text = "Not specified"
                     endDateTextView.isClickable = false
                 }
-                R.id.radioDuration -> {
-                    durationInputLayout.visibility = View.VISIBLE
-                    endDateTextView.isClickable = false
-                    // Update end date if we have a valid duration
-                    if (durationInput.text.isNotEmpty()) {
-                        try {
-                            val durationDays = durationInput.text.toString().toInt()
-                            val startCal = Calendar.getInstance()
-                            // Parse start date
-                            try {
-                                startCal.time = dateFormat.parse(startDateTextView.text.toString()) ?: calendar.time
-                            } catch (e: Exception) {
-                                startCal.timeInMillis = System.currentTimeMillis()
-                            }
-                            val endCal = Calendar.getInstance()
-                            endCal.timeInMillis = startCal.timeInMillis
-                            endCal.add(Calendar.DAY_OF_YEAR, durationDays)
-                            endDateTextView.text = dateFormat.format(endCal.time)
-                        } catch (e: NumberFormatException) {
-                            endDateTextView.text = "Invalid duration"
-                        }
-                    }
-                }
                 R.id.radioEndDate -> {
-                    durationInputLayout.visibility = View.GONE
                     endDateTextView.text = "Tap to set end date"
                     endDateTextView.isClickable = true
                 }
             }
         }
-
-        // Listen for duration changes to update end date
-        durationInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                if (durationRadioGroup.checkedRadioButtonId == R.id.radioDuration && !s.isNullOrEmpty()) {
-                    try {
-                        val durationDays = s.toString().toInt()
-                        val startCal = Calendar.getInstance()
-                        // Parse start date
-                        try {
-                            startCal.time = dateFormat.parse(startDateTextView.text.toString()) ?: calendar.time
-                        } catch (e: Exception) {
-                            startCal.timeInMillis = System.currentTimeMillis()
-                        }
-                        val endCal = Calendar.getInstance()
-                        endCal.timeInMillis = startCal.timeInMillis
-                        endCal.add(Calendar.DAY_OF_YEAR, durationDays)
-                        endDateTextView.text = dateFormat.format(endCal.time)
-                    } catch (e: NumberFormatException) {
-                        endDateTextView.text = "Invalid duration"
-                    }
-                }
-            }
-        })
 
         val dialog = AlertDialog.Builder(this)
             .setTitle("Schedule ${folder.name}")
@@ -374,17 +306,6 @@ class TrackMedicationsActivity : AppCompatActivity() {
                     R.id.radioIndefinite -> {
                         // No end date
                         endDate = null
-                    }
-                    R.id.radioDuration -> {
-                        try {
-                            val durationDays = durationInput.text.toString().toInt()
-                            val endCal = Calendar.getInstance()
-                            endCal.timeInMillis = startDate
-                            endCal.add(Calendar.DAY_OF_YEAR, durationDays)
-                            endDate = endCal.timeInMillis
-                        } catch (e: NumberFormatException) {
-                            Toast.makeText(this, "Invalid duration, using indefinite schedule", Toast.LENGTH_SHORT).show()
-                        }
                     }
                     R.id.radioEndDate -> {
                         try {
