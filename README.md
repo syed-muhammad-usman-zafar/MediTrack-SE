@@ -52,7 +52,11 @@ A comprehensive Android application for health tracking, BMI calculation, medica
 
 ```bash
 # Clone the repository
+<<<<<<< HEAD
 git clone https://github.com/syed-muhammad-usman-zafar/MediTrack-SE.git
+=======
+git clone https://github.com/syed-muhammad-usman-zafar/MediTrack
+>>>>>>> 62d18aeb9b657e34af4f347d3b2dcd7865089f30
 
 
 # Open the project in Android Studio
@@ -63,9 +67,12 @@ git clone https://github.com/syed-muhammad-usman-zafar/MediTrack-SE.git
 # (API level 35+ is recommended)
 
 ```
+<<<<<<< HEAD
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+=======
+>>>>>>> 62d18aeb9b657e34af4f347d3b2dcd7865089f30
 
 ## 🤝 Contributing
 
@@ -76,10 +83,17 @@ Contributions are welcome! Please open an issue or submit a pull request for imp
 For any inquiries, reach out to: 
 - Usman Zafar via [LinkedIn](https://www.linkedin.com/in/usman--zafar/).
 - Fahd Asif via [LinkedIn](https://www.linkedin.com/in/fahd-asif-116923266/).
+<<<<<<< HEAD
 - Zainab Shah via [LinkedIn](https://www.linkedin.com/in/zainab-shah-6389b7316/).
 - Syed Saad via [LinkedIn](https://www.linkedin.com/in/syed-saad-474932298/).
 - Hamd Umer via [LinkedIn](https://www.linkedin.com/in/hamd-umer-993525313/).
 
+=======
+
+## 📄 License
+
+This project is licensed under the MIT License 
+>>>>>>> 62d18aeb9b657e34af4f347d3b2dcd7865089f30
 
 
 
