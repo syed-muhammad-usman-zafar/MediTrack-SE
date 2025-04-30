@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView bmiValueTextView;
     private TextView bmiStatusTextView;
     private CircularProgressIndicator bmiIndicator;
+    private Button chatapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         userNameTextView = findViewById(R.id.user_name);
         bmiValueTextView = findViewById(R.id.bmi_value);
         bmiStatusTextView = findViewById(R.id.bmi_status);
+        chatapp=findViewById(R.id.chat_app);
 
         //circle indicator intializer
         bmiIndicator = findViewById(R.id.bmi_indicator);
@@ -81,8 +84,11 @@ public class MainActivity extends AppCompatActivity {
             }else if (id == R.id.nav_profile) {
                 intent = new Intent(MainActivity.this, UserProfileActivity.class);
             }
+            else if(id == R.id.chat_app)
+            {
+                intent = new Intent(MainActivity.this,Chatgpt.class);
 
-
+            }
 
             if (intent != null) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // <--- smoother transition
@@ -223,7 +229,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
+        chatapp.setOnClickListener(v->{
+           Intent intent = new Intent(MainActivity.this,Chatgpt.class);
+            startActivity(intent);
+        });
         MaterialCardView trackingCardView = findViewById(R.id.card_track_medications);
         trackingCardView.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, TrackMedicationsActivity.class);
