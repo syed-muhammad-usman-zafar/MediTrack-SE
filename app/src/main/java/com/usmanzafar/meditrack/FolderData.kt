@@ -9,8 +9,10 @@ data class FolderData(
 ) : Serializable
 
 data class MedicationSchedule(
-    val time: String, // Time of day in HH:mm format
-    val daysOfWeek: List<Int>, // Days of week (1-7, where 1 is Sunday)
-    val dosage: String, // Dosage information
-    val notes: String = "" // Optional notes
+    val time: String,
+    val daysOfWeek: List<Int>,
+    val dosage: String,
+    val notes: String = "",
+    val startDate: Long = System.currentTimeMillis(), // Default to today
+    val endDate: Long? = null // Null means no end date
 ) : Serializable

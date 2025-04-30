@@ -99,7 +99,6 @@ class CalendarActivity : AppCompatActivity() {
             displayMedicationsForDate(calendar.timeInMillis)
         }
     }
-
     private fun displayMedicationsForDate(dateInMillis: Long) {
         // Make sure we have the latest user data before displaying
         loadUserFolders()
@@ -117,8 +116,8 @@ class CalendarActivity : AppCompatActivity() {
         calendar.timeInMillis = dateInMillis
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
 
-        // Find medications scheduled for this day
-        val medicationsForDay = findMedicationsForDay(dayOfWeek)
+        // Find medications scheduled for this day AND within the valid date range
+        val medicationsForDay = findMedicationsForDay(dayOfWeek, dateInMillis)
 
         if (medicationsForDay.isEmpty()) {
             noMedicationsText.visibility = View.VISIBLE
@@ -140,7 +139,7 @@ class CalendarActivity : AppCompatActivity() {
         val hasImage: Boolean
     )
 
-    private fun findMedicationsForDay(dayOfWeek: Int): List<ScheduledMedication> {
+    private fun findMedicationsForDay(dayOfWeek: Int, selectedDateMillis: Long): List<ScheduledMedication> {
         val medicationsForDay = mutableListOf<ScheduledMedication>()
 
         // Double check that we're using the correct user data
@@ -148,22 +147,42 @@ class CalendarActivity : AppCompatActivity() {
             loadUserFolders()
         }
 
+        // Get selected date at the beginning of the day for accurate comparison
+        val selectedDate = Calendar.getInstance()
+        selectedDate.timeInMillis = selectedDateMillis
+        selectedDate.set(Calendar.HOUR_OF_DAY, 0)
+        selectedDate.set(Calendar.MINUTE, 0)
+        selectedDate.set(Calendar.SECOND, 0)
+        selectedDate.set(Calendar.MILLISECOND, 0)
+        val selectedDateStart = selectedDate.timeInMillis
+
+        Log.d("CalendarActivity", "Finding medications for date: ${Date(selectedDateStart)}")
+
         // Ensure that folderList is not empty
         for (folder in folderList) {
             // Check if folder.schedule exists and is not empty
             if (!folder.schedule.isNullOrEmpty()) {
                 for (schedule in folder.schedule) {
-                    // Check if the schedule contains the current day of the week
+                    // First check if this schedule applies to the selected day of week
                     if (schedule.daysOfWeek.contains(dayOfWeek)) {
-                        medicationsForDay.add(
-                            ScheduledMedication(
-                                name = folder.name,
-                                time = schedule.time,
-                                dosage = schedule.dosage,
-                                notes = schedule.notes,
-                                hasImage = folder.images.isNotEmpty()
+                        // Now check if the selected date is within the schedule's date range
+                        val isWithinRange = isDateInScheduleRange(selectedDateStart, schedule)
+
+                        if (isWithinRange) {
+                            Log.d("CalendarActivity", "Found matching medication: ${folder.name} for ${Date(selectedDateStart)}")
+                            medicationsForDay.add(
+                                ScheduledMedication(
+                                    name = folder.name,
+                                    time = schedule.time,
+                                    dosage = schedule.dosage,
+                                    notes = schedule.notes,
+                                    hasImage = folder.images.isNotEmpty()
+                                )
                             )
-                        )
+                        } else {
+                            Log.d("CalendarActivity", "Medication ${folder.name} not in date range for ${Date(selectedDateStart)}")
+                            Log.d("CalendarActivity", "  Start: ${Date(schedule.startDate)}, End: ${if (schedule.endDate != null) Date(schedule.endDate) else "Indefinite"}")
+                        }
                     }
                 }
             }
@@ -171,6 +190,45 @@ class CalendarActivity : AppCompatActivity() {
 
         // Sort medications by time
         return medicationsForDay.sortedBy { it.time }
+    }
+
+
+    // Helper function to check if a date is within a schedule's valid range
+    private fun isDateInScheduleRange(dateToCheckMillis: Long, schedule: MedicationSchedule): Boolean {
+        // If schedule doesn't have start/end dates (for backward compatibility), treat as valid
+        if (!::currentUserId.isInitialized) {
+            return true
+        }
+
+        // Get schedule start date at beginning of day
+        val startCal = Calendar.getInstance()
+        startCal.timeInMillis = schedule.startDate
+        startCal.set(Calendar.HOUR_OF_DAY, 0)
+        startCal.set(Calendar.MINUTE, 0)
+        startCal.set(Calendar.SECOND, 0)
+        startCal.set(Calendar.MILLISECOND, 0)
+        val startDateMillis = startCal.timeInMillis
+
+        // First check: is the selected date on or after the start date?
+        if (dateToCheckMillis < startDateMillis) {
+            return false
+        }
+
+        // Second check: if there's an end date, is the selected date on or before it?
+        if (schedule.endDate != null) {
+            val endCal = Calendar.getInstance()
+            endCal.timeInMillis = schedule.endDate
+            endCal.set(Calendar.HOUR_OF_DAY, 23)
+            endCal.set(Calendar.MINUTE, 59)
+            endCal.set(Calendar.SECOND, 59)
+            endCal.set(Calendar.MILLISECOND, 999)
+            val endDateMillis = endCal.timeInMillis
+
+            return dateToCheckMillis <= endDateMillis
+        }
+
+        // No end date means it's valid indefinitely after the start date
+        return true
     }
 
     private fun createMedicationView(medication: ScheduledMedication): View {
