@@ -129,7 +129,7 @@ public class Chatgpt extends AppCompatActivity {
             // SYSTEM MESSAGE — Add a system instruction to control GPT behavior
             JSONObject systemMessage = new JSONObject();
             systemMessage.put("role", "system");
-            systemMessage.put("content", "Reply shortly, directly, and use bullet points if possible.");
+            systemMessage.put("content", "Reply shortly, directly, and begin the conversation with something like this is your personal Doctor MediTrack and remember you are here to medically assist the paitent in this MedicalApp so keep your responses like a Doctor.");
             messages.put(systemMessage);
 
             // USER MESSAGE
