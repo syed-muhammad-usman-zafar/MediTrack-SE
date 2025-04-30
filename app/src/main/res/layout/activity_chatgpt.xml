@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Purple-themed Chat UI -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,7 +7,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:windowSoftInputMode="adjustResize"
+    android:background="#F9F9F9"
     tools:context=".Chatgpt">
+
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#5E3DCE">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            app:title="Health Support Partner"
+            app:titleTextColor="#FFFFFF" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <!-- RecyclerView for displaying messages -->
     <androidx.recyclerview.widget.RecyclerView
@@ -14,48 +33,76 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_layout"
-        android:layout_alignParentTop="true"
-        android:paddingBottom="10dp" />
+        android:layout_below="@+id/appbar"
+        android:clipToPadding="false"
+        android:paddingTop="12dp"
+        android:paddingBottom="16dp" />
 
-    <!-- Welcome Text at the top -->
+    <!-- Welcome Text at the top - Only visible when chat is empty -->
     <TextView
+        android:id="@+id/welcome_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/welcome_text"
         android:layout_centerInParent="true"
-        android:text="Welcome to your Health support partner"
         android:gravity="center"
-        android:textSize="25sp" />
+        android:text="Welcome to your Health Support Partner"
+        android:textSize="22sp"
+        android:textColor="#6A1B9A"
+        android:padding="24dp" />
 
     <!-- Bottom Layout containing the EditText and Send Button -->
     <RelativeLayout
         android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="#F9F9F9"
+        android:elevation="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
 
-        <EditText
-            android:id="@+id/message_edit_text"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
-            android:layout_margin="16dp"
-            android:hint="Type your message"
-            android:layout_toLeftOf="@+id/send_button"
-            android:background="@drawable/rounded_corner"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp" />
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/send_button"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="#5E3DCE">
 
-        <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentEnd="true"
+            <EditText
+                android:id="@+id/message_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="Type your message"
+                android:textColorHint="#BA68C8"
+                android:textColor="#5E3DCE"
+                android:inputType="textMultiLine"
+                android:maxLines="5"
+                android:minHeight="48dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:textSize="16sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/send_button"
-            android:layout_centerInParent="true"
-            android:layout_margin="10dp"
-            android:padding="8dp"
-            android:src="@drawable/send"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            app:fabSize="normal"
+            android:backgroundTint="#5E3DCE"
+            app:tint="#FFFFFF"
+            android:contentDescription="Send message"
+            app:srcCompat="@drawable/send" />
     </RelativeLayout>
 
 </RelativeLayout>

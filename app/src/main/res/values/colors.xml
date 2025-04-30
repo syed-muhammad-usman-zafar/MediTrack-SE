@@ -4,7 +4,7 @@
     <color name="primary_color">#4F46E5</color>
     <color name="primary_light">#EEF2FF</color>
     <color name="primary_dark">#3730A3</color>
-
+    <color name="accent">#448AFF</color>
     <!-- Secondary accent color -->
     <color name="secondary_color">#10B981</color>
     <color name="secondary_light">#ECFDF5</color>
@@ -17,13 +17,21 @@
     <!-- Text colors -->
     <color name="text_primary">#111827</color>
     <color name="text_secondary">#6B7280</color>
-
+    <color name="text_hint">#9E9E9E</color>
     <!-- Utility colors -->
+    <color name="stroke_light">#E0E0E0</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
     <color name="progress_healthy">#008000</color>
     <color name="progress_undefined">#808080</color> #
-    <color name="black">#000000</color>
     <color name="fab">#BB86FC</color>
+
+
+    <!-- Message Bubble Colors -->
+    <color name="user_message_bg">#E3F2FD</color>
+    <color name="bot_message_bg">#FFFFFF</color>
+    <color name="user_message_text">#212121</color>
+    <color name="bot_message_text">#212121</color>
 
 </resources>
