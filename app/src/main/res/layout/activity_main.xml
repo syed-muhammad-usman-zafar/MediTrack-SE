@@ -20,356 +20,353 @@
         app:titleTextColor="@color/white"
         android:elevation="4dp"/>
 
-
-    <!-- Main Content Area -->
-    <ScrollView
+    <!-- Main Content Area with CoordinatorLayout to position FAB -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
+        android:layout_weight="1">
 
-
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="80dp">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-            <!-- Welcome Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome back,"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_primary"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- BMI Status Card (Replacing Medication Overview Card) -->
-            <com.google.android.material.card.MaterialCardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="#E0E0E0"
-                app:cardBackgroundColor="#FFFFFF">
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="80dp">
 
+                <!-- Welcome Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome back,"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- BMI Status Card (Removing "Let's Chat" button) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="#E0E0E0"
+                    app:cardBackgroundColor="#FFFFFF">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Your BMI Status"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000"
+                            android:layout_marginBottom="12dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <com.google.android.material.progressindicator.CircularProgressIndicator
+                                android:id="@+id/bmi_indicator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:progress="50"
+                                app:indicatorSize="48dp"
+                                app:trackThickness="6dp"
+                                app:indicatorColor="@color/primary_color"
+                                app:trackColor="#E0E0E0"/>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginStart="16dp">
+
+                                <TextView
+                                    android:id="@+id/bmi_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="BMI: Not calculated"
+                                    android:textSize="16sp"
+                                    android:textColor="#000000"/>
+
+                                <TextView
+                                    android:id="@+id/bmi_status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tap BMI Calculator to check your BMI"
+                                    android:textSize="14sp"
+                                    android:textColor="#616161"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Features Section Title -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Features"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- First row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <!-- Track Medications Feature -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_track_medications"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/primary_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="12dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_pill"
+                                android:layout_marginBottom="8dp"
+                                app:tint="@color/primary_color" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Track Medications"
+                                android:textSize="14sp"
+                                android:textColor="@color/text_primary"
+                                android:textStyle="bold"
+                                android:textAlignment="center"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- BMI Calculator Feature -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_bmi"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="3dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/primary_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="12dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_bmi"
+                                android:layout_marginBottom="8dp"
+                                app:tint="@color/primary_color" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="BMI Calculator"
+                                android:textSize="14sp"
+                                android:textColor="@color/text_primary"
+                                android:textStyle="bold"
+                                android:textAlignment="center"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <!-- Second row - -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <!-- Nutrition Info Feature -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_nutrition"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/primary_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="12dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_nutrition"
+                                android:layout_marginBottom="8dp"
+                                app:tint="@color/primary_color" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nutrition Info"
+                                android:textSize="14sp"
+                                android:textColor="@color/text_primary"
+                                android:textStyle="bold"
+                                android:textAlignment="center"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Pharmacies Feature -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_pharmacies"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/primary_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="12dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:src="@drawable/ic_pharmacy"
+                                android:layout_marginBottom="8dp"
+                                app:tint="@color/primary_color" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pharmacies"
+                                android:textSize="14sp"
+                                android:textColor="@color/text_primary"
+                                android:textStyle="bold"
+                                android:textAlignment="center"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- Pills Info Feature -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_pill_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/primary_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
+                        android:padding="16dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/information"
+                            android:layout_marginEnd="16dp"
+                            app:tint="@color/white" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Your BMI Status"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="#000000"/>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/chat_app"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:text="Let's Chat"
-                            android:textSize="12sp"
-                            app:cornerRadius="20dp"
-                            android:paddingHorizontal="12dp"
-                            android:minWidth="0dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            style="@style/Widget.MaterialComponents.Button"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <com.google.android.material.progressindicator.CircularProgressIndicator
-                            android:id="@+id/bmi_indicator"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:progress="50"
-                            app:indicatorSize="48dp"
-                            app:trackThickness="6dp"
-                            app:indicatorColor="@color/primary_color"
-                            app:trackColor="#E0E0E0"/>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginStart="16dp">
-
-                            <TextView
-                                android:id="@+id/bmi_value"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="BMI: Not calculated"
-                                android:textSize="16sp"
-                                android:textColor="#000000"/>
-
-                            <TextView
-                                android:id="@+id/bmi_status"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Tap BMI Calculator to check your BMI"
-                                android:textSize="14sp"
-                                android:textColor="#616161"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Features Section Title -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Features"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
-                android:layout_marginBottom="12dp"/>
-
-            <!-- First row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
-
-                <!-- Track Medications Feature -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_track_medications"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/primary_light">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp"
-                        android:gravity="center">
+                            android:text="Get Medicine Info"
+                            android:textSize="16sp"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"/>
 
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/ic_pill"
-                            android:layout_marginBottom="8dp"
-                            app:tint="@color/primary_color" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Track Medications"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            android:textAlignment="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- BMI Calculator Feature -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_bmi"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginEnd="3dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/primary_light">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/ic_bmi"
-                            android:layout_marginBottom="8dp"
-                            app:tint="@color/primary_color" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="BMI Calculator"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            android:textAlignment="center"/>
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/white"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
+        </ScrollView>
 
-            <!-- Second row - -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
+        <!-- Floating Action Button for Chat -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/chat_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="Open chat assistant"
+            android:src="@drawable/ic_chat"
+            app:backgroundTint="@color/primary_color"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:tint="@color/white"/>
 
-                <!-- Nutrition Info Feature -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_nutrition"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/primary_light">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/ic_nutrition"
-                            android:layout_marginBottom="8dp"
-                            app:tint="@color/primary_color" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nutrition Info"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            android:textAlignment="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Pharmacies Feature -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_pharmacies"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/primary_light">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="12dp"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/ic_pharmacy"
-                            android:layout_marginBottom="8dp"
-                            app:tint="@color/primary_color" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pharmacies"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            android:textAlignment="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-
-            <!-- Pills Info Feature -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_pill_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/primary_color">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/information"
-                        android:layout_marginEnd="16dp"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Get Medicine Info"
-                        android:textSize="16sp"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"/>
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_right"
-                        app:tint="@color/white"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-
-        </LinearLayout>
-    </ScrollView>
-
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

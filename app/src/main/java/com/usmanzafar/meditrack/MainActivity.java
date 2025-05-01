@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton; // Add this import
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView bmiValueTextView;
     private TextView bmiStatusTextView;
     private CircularProgressIndicator bmiIndicator;
-    private Button chatapp;
+    private FloatingActionButton chatFab; // Change from Button to FloatingActionButton
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         userNameTextView = findViewById(R.id.user_name);
         bmiValueTextView = findViewById(R.id.bmi_value);
         bmiStatusTextView = findViewById(R.id.bmi_status);
-        chatapp=findViewById(R.id.chat_app);
+        chatFab = findViewById(R.id.chat_app); // Use the correct ID from your XML
 
         //circle indicator intializer
         bmiIndicator = findViewById(R.id.bmi_indicator);
@@ -84,11 +84,7 @@ public class MainActivity extends AppCompatActivity {
             }else if (id == R.id.nav_profile) {
                 intent = new Intent(MainActivity.this, UserProfileActivity.class);
             }
-            else if(id == R.id.chat_app)
-            {
-                intent = new Intent(MainActivity.this,Chatgpt.class);
-
-            }
+            // Remove chat_app from bottom navigation handling since it's now a FAB
 
             if (intent != null) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // <--- smoother transition
@@ -229,10 +225,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        chatapp.setOnClickListener(v->{
-           Intent intent = new Intent(MainActivity.this,Chatgpt.class);
+        // Set up chat FAB click listener correctly
+        chatFab.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, Chatgpt.class);
             startActivity(intent);
         });
+
         MaterialCardView trackingCardView = findViewById(R.id.card_track_medications);
         trackingCardView.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, TrackMedicationsActivity.class);
@@ -244,7 +242,5 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Pill_InfoActivity.class);
             startActivity(intent);
         });
-
-
     }
 }
