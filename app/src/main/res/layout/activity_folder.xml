@@ -7,33 +7,34 @@
     tools:context=".ImageActivity"
     android:background="@color/background_color">
 
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary_dark"
+        app:title="Prescription"
+        app:titleTextColor="@color/white"
+        android:elevation="5dp"
+        app:navigationIcon="@drawable/ic_arrow_back"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="56dp"> <!-- Add bottom margin for the navigation bar -->
 
-        <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <!-- Search Bar -->
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_bar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary_dark"
-            app:title="Info"
-            app:titleTextColor="@color/white"
-            android:elevation="5dp"
-            app:navigationIcon="@drawable/ic_arrow_back">
-
-
-
-            <!-- Search Bar in the Toolbar -->
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                app:iconifiedByDefault="false"
-                app:queryHint="Search Prescription" />
-        </androidx.appcompat.widget.Toolbar>
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/edit_text_background"
+            app:queryHint="Search Prescriptions"
+            app:iconifiedByDefault="false" />
 
         <!-- Buttons for importing and capturing images -->
         <LinearLayout

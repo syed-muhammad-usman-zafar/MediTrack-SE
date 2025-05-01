@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -154,7 +155,7 @@ class ImageActivity : AppCompatActivity() {
         // Set up toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = folderName
+        supportActionBar?.title = folderName //Idhar jo medicne ka nam hoga uska nam toolbar pr ajye gha
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Convert the string list to image items
@@ -179,7 +180,7 @@ class ImageActivity : AppCompatActivity() {
             filteredImageList,
             { position -> deleteImage(position) }, // onImageDelete
             { position ->  Toast.makeText(this, "Image $position clicked", Toast.LENGTH_SHORT).show() // onImageClick
-                //full screen implementation
+
             }
         )
 
@@ -341,5 +342,16 @@ class ImageActivity : AppCompatActivity() {
         resultIntent.putExtra("folder_name", folderName)
         resultIntent.putStringArrayListExtra("folder_images", ArrayList(imagePaths))
         setResult(RESULT_OK, resultIntent)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle the back button on toolbar
+        return if (item.itemId == android.R.id.home) {
+            finish()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 }
