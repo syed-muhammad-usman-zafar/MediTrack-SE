@@ -1,10 +1,17 @@
 package com.usmanzafar.meditrack;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +33,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.graphics.Color;
+import android.view.View;
+import android.widget.TextView;
+import android.content.Intent;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText nameInput, emailInput, DOBInput, passwordInput, confirmPasswordInput;
@@ -110,6 +126,33 @@ public class SignupActivity extends AppCompatActivity {
         });
 
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+
+
+        TextView loginRedirect = findViewById(R.id.login_redirect);
+        String text = "Already have an account? Sign in";
+        SpannableString spannable = new SpannableString(text);
+        int startIndex = text.indexOf("Sign in");
+        int endIndex = startIndex + "Sign in".length();
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                // Open LoginActivity
+                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);        // Underline
+                ds.setColor(Color.parseColor("#0000EE")); // Link blue
+            }
+        };
+        spannable.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        loginRedirect.setText(spannable);
+        loginRedirect.setMovementMethod(LinkMovementMethod.getInstance());
+        loginRedirect.setHighlightColor(Color.TRANSPARENT); // Optional: removes background highlight
+
+
     }
 
     private void createAccount(final String name, String email, String password, final String dob) {
@@ -164,4 +207,6 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

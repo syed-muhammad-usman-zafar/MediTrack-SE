@@ -134,4 +134,15 @@
         android:padding="12dp"
         app:cornerRadius="8dp"/>
 
+    <TextView
+        android:id="@+id/login_redirect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Already have an account? Sign in"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp"/>
+
+
 </LinearLayout>
