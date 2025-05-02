@@ -40,7 +40,8 @@
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:textColor="@color/text_primary"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColorHint="#99000000"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -59,7 +60,8 @@
             android:hint="Password"
             android:inputType="textPassword"
             android:textColor="@color/text_primary"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textColorHint="#99000000"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
