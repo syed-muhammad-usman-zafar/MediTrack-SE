@@ -71,11 +71,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for improvements or suggestions.
+Contributions are welcome :) ! Please open an issue or submit a pull request for improvements or suggestions .
 
 ## 📄 License
 
-This project is licensed under the MIT License 
-
-
-
+This project is licensed under the MIT License
