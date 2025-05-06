@@ -34,7 +34,12 @@ A comprehensive Android application for health tracking, BMI calculation, medica
 - **User Profile Management**  
   - Create and update user profiles.
   - Activity: `UserProfileActivity.java`
-
+    
+- **AI Chatbot Assistant**  
+  - Ask health-related questions (e.g., medication use, BMI tips, nutrition guidance)
+  - Integrated with  ChatGPT API for instant responses
+  - Activity:`Chatgpt.java`
+  
 - **Firebase Integration**  
   - User authentication and real-time data storage with Firebase.
 
