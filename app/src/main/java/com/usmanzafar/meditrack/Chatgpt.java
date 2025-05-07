@@ -71,7 +71,7 @@ public class Chatgpt extends AppCompatActivity {
     public List<Message> messageList;
     MessageAdapter messageAdapter;
     TextView welcomeText;
-    final String OPEN_AI_API_KEY1="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";
+
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
 
