@@ -1,6 +1,19 @@
-# MedTrack - Health Management Android App
+<div align="center">
 
+  <h1>
+    MediTrack &nbsp;
+    <img src="https://github.com/user-attachments/assets/acd160c2-449f-4c95-b9fe-3722e5444862" alt="MedTrack Logo" width="40" height="40">
+  </h1>
+
+  <p><b>Personal health companion app</b></p>
+
+</div>
+
+<p>
 A comprehensive Android application for health tracking, BMI calculation, medication management, and pharmacy location services.
+</p>
+
+
 
 ---
 
